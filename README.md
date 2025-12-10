@@ -2,11 +2,11 @@
 # Project 1: FSM Front-End Design
 
 ## Project Overview
-[cite_start]This project involves the front-end design of a Finite State Machine (FSM) for a **hh:mm 4-digit 24h-format watch controller**[cite: 1, 4]. [cite_start]The design includes the FSM diagram, Verilog RTL implementation, and a comprehensive testbench[cite: 4, 12, 14].
+This project involves the front-end design of a Finite State Machine (FSM) for a **hh:mm 4-digit 24h-format watch controller**[cite: 1, 4]. [cite_start]The design includes the FSM diagram, Verilog RTL implementation, and a comprehensive testbench[cite: 4, 12, 14].
 
 ## Team Information
-* [cite_start]**Structure:** Work as teams of 3 students[cite: 3].
-* [cite_start]**Group ID:** Gxx (Replace `xx` with your assigned 2-digit group number)[cite: 26].
+* **Structure:** Work as teams of 3 students[cite: 3].
+* **Group ID:** Gxx (Replace `xx` with your assigned 2-digit group number).
 
 ## Functional Requirements
 [cite_start]The FSM controller operates in **4 modes**, cycled through using the **Mode** button[cite: 4, 9]:
