@@ -38,6 +38,8 @@ module set_alarm (
                 end else begin
                     modes <= 0;
                 end
+        end else begin
+            modes <= 'b0;
         end
     end
 
