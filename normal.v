@@ -1,7 +1,9 @@
 module normal (
     input clk,rst,normal_en,
-    input [4:0] i_hours,
-    input [5:0] i_minutes,
+    input [1:0] i_hours_left,
+    input [3:0] i_hours_right,
+    input [2:0] i_minutes_left,
+    input [3:0] i_minutes_right,
     output reg [4:0] o_hours,
     output reg [5:0] o_minutes
 );
@@ -13,8 +15,8 @@ always @(posedge clk or negedge rst) begin
         o_minutes <= 0;
         seconds <= 0;
     end else if (normal_en) begin
-        o_hours <= i_hours;
-        o_minutes <= i_minutes;
+        o_hours <= i_hours_left * 10 + i_hours_right;
+        o_minutes <= i_minutes_left * 10 + i_minutes_right;
     end else begin
             seconds <= seconds + 1;
             if (seconds == 59) begin

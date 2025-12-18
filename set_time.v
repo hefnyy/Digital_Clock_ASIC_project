@@ -69,6 +69,6 @@ module set_time (
         end
     end
 
-    assign ack_flag = (modes == 4);
+    assign ack_flag = (modes == 3);
 
 endmodule

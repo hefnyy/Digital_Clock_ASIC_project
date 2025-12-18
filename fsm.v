@@ -2,16 +2,20 @@ module fsm (
     // Input Declaration
     input wire mode_button,
     input wire inc_button,
-    input wire [4:0] set_time_hours,
-    input wire [5:0] set_time_minutes,
+    input wire [1:0] set_time_hours_left,
+    input wire [3:0] set_time_hours_right,
+    input wire [2:0] set_time_minutes_left,
+    input wire [3:0] set_time_minutes_right,
     input wire [4:0] normal_hours,
     input wire [5:0] normal_minutes,
     input wire set_time_ack_flag,
     input wire [5:0] stop_watch_minutes,
     input wire [5:0] stop_watch_seconds,
     input wire stop_watch_ack_flag,
-    input wire [4:0] set_alarm_hours,
-    input wire [5:0] set_alarm_minutes,
+    input wire [1:0] set_alarm_hours_left,
+    input wire [3:0] set_alarm_hours_right,
+    input wire [2:0] set_alarm_minutes_left,
+    input wire [3:0] set_alarm_minutes_right,
     input wire set_alarm_ack_flag,
     input wire on_off_alarm,
     input wire clk,
@@ -33,6 +37,11 @@ localparam normal = 2'b00,
            set_time = 2'b10;
 
 reg [1:0] current_state, next_state;
+
+// internal wires for alarm
+wire [4:0] set_alarm_hours_total;
+wire [5:0] set_alarm_minutes_total;
+
 
 // transition logic
 always @(posedge clk or negedge rst) begin
@@ -95,7 +104,7 @@ always @(*) begin
         normal: begin
             hours_fsm = normal_hours;
             minutes_fsm = normal_minutes;
-            if(on_off_alarm & (normal_minutes == set_alarm_minutes) & (normal_hours == set_alarm_hours)) begin
+            if(on_off_alarm & (normal_minutes == set_alarm_minutes_total) & (normal_hours == set_alarm_hours_total)) begin
                 alarm_sound = 1'b1;
             end else begin
                 alarm_sound = 1'b0;
@@ -103,8 +112,8 @@ always @(*) begin
         end
 
         alarm_mode: begin
-            hours_fsm = set_alarm_hours;
-            minutes_fsm = set_alarm_minutes;
+            hours_fsm = set_alarm_hours_left*10 + set_alarm_hours_right;
+            minutes_fsm = set_alarm_minutes_left*10 + set_alarm_minutes_right;
             set_alarm_en = 1'b1;
         end
 
@@ -115,11 +124,17 @@ always @(*) begin
         end
 
         set_time: begin
-            hours_fsm = set_time_hours;
-            minutes_fsm = set_time_minutes;
+            hours_fsm = set_time_hours_left*10 + set_time_hours_right;
+            minutes_fsm = set_time_minutes_left*10 + set_time_minutes_right;
             set_time_en = 1'b1;
+            if(set_time_ack_flag) begin
+                normal_en = 1'b1;
+            end
         end
     endcase
 end
+
+assign set_alarm_hours_total = set_alarm_hours_left*10 + set_alarm_hours_right;
+assign set_alarm_minutes_total = set_alarm_minutes_left*10 + set_alarm_minutes_right;
 
 endmodule

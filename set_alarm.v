@@ -79,7 +79,7 @@ module set_alarm (
         end
     end
 
-    assign ack_flag = (modes == 5);
+    assign ack_flag = (modes == 4);
 
 
 endmodule
