@@ -6,7 +6,7 @@ This project involves the front-end design of a Finite State Machine (FSM) for a
 
 ## Team Information
 * **Structure:** Work as teams of 3 students.
-* **Group ID:** Gxx (Replace `xx` with your assigned 2-digit group number).
+* **Group ID:** G23.
 
 ## Functional Requirements
 The FSM controller operates in **4 modes**, cycled through using the **Mode** button:
