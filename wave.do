@@ -8,7 +8,6 @@ add wave -noupdate /top_module_tb/alarm_sound_tb
 add wave -noupdate -color Yellow -radix unsigned /top_module_tb/hours_fsm_tb
 add wave -noupdate -color Yellow -radix unsigned /top_module_tb/minutes_fsm_tb
 add wave -noupdate -expand -group FSM /top_module_tb/top_module_inst/fsm_inst/mode_button
-add wave -noupdate -expand -group FSM /top_module_tb/top_module_inst/fsm_inst/inc_button
 add wave -noupdate -expand -group FSM /top_module_tb/top_module_inst/fsm_inst/set_time_hours_left
 add wave -noupdate -expand -group FSM /top_module_tb/top_module_inst/fsm_inst/set_time_hours_right
 add wave -noupdate -expand -group FSM /top_module_tb/top_module_inst/fsm_inst/set_time_minutes_left
