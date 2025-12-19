@@ -38,6 +38,8 @@ localparam normal = 2'b00,
 
 reg [1:0] current_state, next_state;
 reg alarm_status;
+reg alarm_sound_active;
+reg [5:0] alarm_counter;
 
 // internal wires for alarm
 wire [4:0] set_alarm_hours_total;
@@ -50,8 +52,29 @@ always @(posedge clk or negedge rst) begin
     if(!rst) begin
         current_state <= normal;
         alarm_status <= 'b0;
+        alarm_sound_active <= 1'b0;
+        alarm_counter <= 'b0;
     end else begin
         current_state <= next_state;
+        if (current_state == alarm_mode && on_off_alarm) begin
+            alarm_status <= 1'b1; 
+        end 
+        if (alarm_status && 
+        (normal_minutes == set_alarm_minutes_total) && 
+        (normal_hours == set_alarm_hours_total) && 
+        !alarm_sound_active) begin
+            alarm_sound_active <= 1'b1;
+            alarm_counter <= 'b0;
+        end
+        if (alarm_sound_active) begin
+            if (alarm_counter == 6'd59) begin
+                alarm_sound_active <= 1'b0;     // turn off alarm sound after 60 clock cycles
+                alarm_status <= 1'b0;         // reset alarm status
+                alarm_counter <= 'b0;           
+            end else begin
+                alarm_counter <= alarm_counter + 1;
+            end
+        end
     end
 end
 
@@ -102,25 +125,20 @@ always @(*) begin
     normal_en = 1'b0;
     hours_fsm = 'b0;
     minutes_fsm = 'b0;
+    alarm_sound = 1'b0;
     case (current_state)
         normal: begin
             hours_fsm = normal_hours;
             minutes_fsm = normal_minutes;
-            if(alarm_status & (normal_minutes == set_alarm_minutes_total) & (normal_hours == set_alarm_hours_total)) begin
+            if(alarm_sound_active) begin
                 alarm_sound = 1'b1;
-                alarm_status = 1'b0;
-            end else begin
-                alarm_sound = 1'b0;
-            end
+            end 
         end
 
         alarm_mode: begin
             hours_fsm = set_alarm_hours_left*10 + set_alarm_hours_right;
             minutes_fsm = set_alarm_minutes_left*10 + set_alarm_minutes_right;
             set_alarm_en = 1'b1;
-            if (on_off_alarm) begin
-                alarm_status = 1'b1;
-            end
         end
 
         stop_watch: begin
