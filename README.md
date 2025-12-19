@@ -34,5 +34,8 @@ The FSM transitions between states based on the `mode_button` and acknowledgment
 * **Digit Increment**: In Set Time and Alarm modes, pressing `set_button` increments the selected digit.
 ### Block Diagram
  <img width="4480" height="2320" alt="Drawing 6 (6)" src="https://github.com/user-attachments/assets/bc43fb50-9d8b-45e7-8ba4-86ce266c43c9" />
+ 
 ### State Diagram
-![FSM State Diagram](fsm_state_diagram.png) 
+
+<img width="974" height="570" alt="Screenshot 2025-12-19 190455" src="https://github.com/user-attachments/assets/57e00bbe-0dcc-48d1-84fd-2905d3d038b1" />
+
