@@ -1,7 +1,6 @@
 module top_module (
     input wire mode_button_top,
     input wire inc_button_top,
-    // input wire [7:0] clk_div_ratio_top,
     input wire clk_top,
     input wire rst_top,
     output wire alarm_sound_top,
@@ -12,6 +11,7 @@ module top_module (
 // Internal Signals
 wire set_time_en_top;
 wire set_time_ack_top;
+wire set_time;
 wire [1:0] set_time_hours_left_top;
 wire [3:0] set_time_hours_right_top;
 wire [2:0] set_time_minutes_left_top;
@@ -37,17 +37,7 @@ wire [5:0] stop_watch_seconds_top;
 wire clock_div_output_top;
 wire clock_div_enable_top;
 
-assign clock_div_enable_top = 1'b1;
-
 // Modules Instanciation
-
-// clock_div clock_div_inst(
-//     .i_ref_clk(clk_top),
-//     .i_rst_n(rst_top),
-//     .i_clk_en(clock_div_enable_top),
-//     .i_div_ratio(clk_div_ratio_top),
-//     .o_div_clk(clock_div_output_top)
-// );
 
 fsm fsm_inst(
     .mode_button(mode_button_top),
@@ -76,7 +66,8 @@ fsm fsm_inst(
     .normal_en(normal_en_top),
     .alarm_sound(alarm_sound_top),
     .hours_fsm(hours_fsm_top),
-    .minutes_fsm(minutes_fsm_top)
+    .minutes_fsm(minutes_fsm_top),
+    .set_time_active(set_time_active)
 );
 
 normal normal_inst(
@@ -101,7 +92,8 @@ set_time set_time_inst(
     .o_hours_right(set_time_hours_right_top),
     .o_minutes_left(set_time_minutes_left_top),
     .o_minutes_right(set_time_minutes_right_top),
-    .ack_flag(set_time_ack_top)
+    .ack_flag(set_time_ack_top),
+    .set_time_active(set_time_active)
 );
 
 set_alarm set_alarm_inst(

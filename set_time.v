@@ -5,6 +5,7 @@ module set_time (
     output reg [3:0] o_hours_right,
     output reg [2:0] o_minutes_left,
     output reg [3:0] o_minutes_right,
+    output reg set_time_active,
     output ack_flag
 );
     reg [2:0] modes;
@@ -16,6 +17,7 @@ module set_time (
             o_minutes_left <= 0;
             o_minutes_right <= 0;
             modes <= 0;
+            set_time_active <= 0;
         end else if(set_time_en) begin           
                 if (modes == 0) begin                       // Modify on (h)h:mm
                     if (mode_button) begin  
@@ -61,14 +63,22 @@ module set_time (
                             o_minutes_right <= 0;
                         end
                     end
+                end else if (modes == 4) begin             // Set Time On or Off
+                    if (mode_button) begin
+                        modes <= modes + 1;
+                    end else if (inc_button) begin
+                        set_time_active <= 1;
+                    end else begin
+                        set_time_active <= 0;
+                    end
                 end else begin
-                    modes <= 0;
+                    modes <= 'b0;
                 end
         end else begin
             modes <= 'b0;
         end
     end
 
-    assign ack_flag = (modes == 3);
+    assign ack_flag = (modes == 4);
 
 endmodule

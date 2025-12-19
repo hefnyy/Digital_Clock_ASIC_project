@@ -1,0 +1,7 @@
+fsm.v
+normal.v
+set_alarm.v
+set_time.v
+stop_watch.v
+top_module.v
+top_module_tb.v

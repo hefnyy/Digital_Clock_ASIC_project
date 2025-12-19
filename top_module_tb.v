@@ -3,7 +3,6 @@ module top_module_tb();
 
 // Parameters
 parameter CLOCK_PERIOD = 10;
-// parameter CLOCK_DIVISION_RATIO = 8'd10;
 
 // Signals
 reg mode_button_tb;
@@ -21,7 +20,6 @@ top_module top_module_inst (
     .inc_button_top(inc_button_tb),
     .clk_top(clk_tb),
     .rst_top(rst_tb),
-    // .clk_div_ratio_top(clock_div_ratio_tb),
     .alarm_sound_top(alarm_sound_tb),
     .hours_fsm_top(hours_fsm_tb),
     .minutes_fsm_top(minutes_fsm_tb)
@@ -39,67 +37,22 @@ initial begin
     // Reset DUT
     reset();
 
-    // Test normal mode
-    #(4000*CLOCK_PERIOD);
+    // TEST NORMAL MODE
+    #(400*CLOCK_PERIOD);
 
-    // Test set time mode
-    mode_change(4'd5);
+    // TEST ALARM MODE
+    test_alarm_mode();
 
-    increment_tick(4'd1);
+    // TEST STOP WATCH MODE
+    test_stopwatch_basic();
 
-    mode_change(4'd6);
+    // TEST SET TIME MODE and (Test Alarm Sound)
+    test_set_time_mode();
 
-    increment_tick(4'd2);   // left hour inc = 2
-    // increment_tick();   // left hour inc = 2
+    // TEST SPLIT MODE IN STOP WATCH
+    test_stopwatch_split();
 
-    mode_change(4'd1);
-
-    increment_tick(4'd2);   // right hour inc = 2
-    // increment_tick();   // right hour inc = 2
-
-    mode_change(4'd1);
-
-    increment_tick(4'd5);   // left minute inc = 1
-    // increment_tick();   // left minute inc = 2
-    // increment_tick();   // left minute inc = 3
-    // increment_tick();   // left minute inc = 4
-    // increment_tick();   // left minute inc = 5
-
-    mode_change(4'd1);
-
-    increment_tick(4'd4);   // right minute inc = 1
-    // increment_tick();   // right minute inc = 2
-    // increment_tick();   // right minute inc = 3
-    // increment_tick();   // right minute inc = 4
-
-    mode_change(4'd1);
-
-
-    #(CLOCK_PERIOD*1000)
-
-    mode_change(4'd6);
-
-    increment_tick(4'd1);   // start
-
-    #(CLOCK_PERIOD*1000)
-
-    mode_change(4'd1);  // split
-
-    #(CLOCK_PERIOD*500)
-
-    mode_change(4'd1);  // split release
-
-    #(CLOCK_PERIOD*500)
-
-    increment_tick(4'd1);    // stop
-
-    #(CLOCK_PERIOD*10)
-
-    mode_change(4'd1); // clear
-
-    #(CLOCK_PERIOD*10)
-
-    mode_change(4'd1);  // go to normal
+    mode_change(6);     // Go to Normal Mode
 
     #(CLOCK_PERIOD*100)
 
@@ -114,7 +67,6 @@ begin
     inc_button_tb = 1'b0;
     clk_tb = 1'b0;
     rst_tb = 1'b0;
-    // clock_div_ratio_tb = CLOCK_DIVISION_RATIO;
 end
 endtask
 
@@ -155,6 +107,87 @@ begin
         @(negedge clk_tb)
         inc_button_tb = 1'b0;
     end
+end
+endtask
+
+//==================== TEST ALARM MODE ====================
+task test_alarm_mode;
+begin
+    mode_change(1);     // Go to Alarm Mode
+
+    increment_tick(2);  // left hours = 2
+    mode_change(1);     // right hours
+    increment_tick(7);  // right hours = 3
+
+    mode_change(1);     // left minutes
+    increment_tick(4);  // left minutes = 4
+
+    mode_change(1);     // right minutes
+    increment_tick(5);  // right minutes = 5
+
+    mode_change(1);     // Alarm on/off
+    increment_tick(1);  // Set alarm ON
+end
+endtask
+
+//==================== TEST STOP WATCH MODE ====================
+task test_stopwatch_basic;
+begin
+    mode_change(1);     // Go to Stop Watch Mode
+    increment_tick(1);  // Start Timer
+
+    #(40*CLOCK_PERIOD);
+
+    increment_tick(1);  // Stop Timer
+    mode_change(1);     // Clear
+end
+endtask
+
+//==================== TEST SET TIME MODE ====================
+task test_set_time_mode;
+begin
+    mode_change(1);     // Go to Set Time Mode (Set left hours) and (Test Alarm Sound)
+
+    increment_tick(2);  // left hours = 2
+    mode_change(1);     // right hours
+    increment_tick(3);  // right hours = 3
+
+    mode_change(1);     // left minutes
+    increment_tick(4);  // left minutes = 4
+
+    mode_change(1);     // right minutes
+    increment_tick(4);  // right minutes = 4
+
+    mode_change(1);     // Set Time Active
+    increment_tick(1);  // Activate time setting
+
+    mode_change(1);     // Go to Normal Mode
+    #(CLOCK_PERIOD*100);
+end
+endtask
+
+//==================== TEST SPLIT MODE IN STOP WATCH ====================
+task test_stopwatch_split;
+begin
+    mode_change(6);      // Go to Stop Watch Mode
+
+    increment_tick(1);   // Start Timer
+    #(CLOCK_PERIOD*50);
+
+    increment_tick(1);   // Stop Timer
+    #(CLOCK_PERIOD*10);
+
+    increment_tick(1);   // Start again
+    #(CLOCK_PERIOD*50);
+
+    mode_change(1);      // Split
+    #(CLOCK_PERIOD*50);
+
+    mode_change(1);      // Split Release
+    #(CLOCK_PERIOD*50);
+
+    increment_tick(1);   // Stop Timer
+    mode_change(1);      // Clear
 end
 endtask
 

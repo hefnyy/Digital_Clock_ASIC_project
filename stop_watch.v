@@ -76,7 +76,7 @@ always @(*) begin
     end
 end
 
-assign stop_watch_ack_flag = (clear_flag == 1'b1 & modes_counter == 3'b10) ? 1'b1: (modes_counter == 3'b11) ? 1'b1 : 1'b0;
+assign stop_watch_ack_flag = (clear_flag == 1'b1 & modes_counter == 3'b01) ? 1'b1: (modes_counter == 3'b11) ? 1'b1 : 1'b0;
 assign clear_flag = ((modes_counter == 3'b1 | modes_counter == 3'b11) & inc_counter == 1'b0);
 
 endmodule

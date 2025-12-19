@@ -12,6 +12,7 @@ module fsm (
     input wire [5:0] stop_watch_minutes,
     input wire [5:0] stop_watch_seconds,
     input wire stop_watch_ack_flag,
+    input wire set_time_active,
     input wire [1:0] set_alarm_hours_left,
     input wire [3:0] set_alarm_hours_right,
     input wire [2:0] set_alarm_minutes_left,
@@ -37,10 +38,12 @@ localparam normal = 2'b00,
            set_time = 2'b10;
 
 reg [1:0] current_state, next_state;
+reg alarm_status;
 
 // internal wires for alarm
 wire [4:0] set_alarm_hours_total;
 wire [5:0] set_alarm_minutes_total;
+
 
 
 // transition logic
@@ -99,13 +102,13 @@ always @(*) begin
     normal_en = 1'b0;
     hours_fsm = 'b0;
     minutes_fsm = 'b0;
-    // alarm_sound = 1'b0;
     case (current_state)
         normal: begin
             hours_fsm = normal_hours;
             minutes_fsm = normal_minutes;
-            if(on_off_alarm & (normal_minutes == set_alarm_minutes_total) & (normal_hours == set_alarm_hours_total)) begin
+            if(alarm_status & (normal_minutes == set_alarm_minutes_total) & (normal_hours == set_alarm_hours_total)) begin
                 alarm_sound = 1'b1;
+                alarm_status = 1'b0;
             end else begin
                 alarm_sound = 1'b0;
             end
@@ -115,6 +118,11 @@ always @(*) begin
             hours_fsm = set_alarm_hours_left*10 + set_alarm_hours_right;
             minutes_fsm = set_alarm_minutes_left*10 + set_alarm_minutes_right;
             set_alarm_en = 1'b1;
+            if (on_off_alarm) begin
+                alarm_status = 1'b1;
+            end else begin
+                alarm_status = 'b0;
+            end
         end
 
         stop_watch: begin
@@ -127,7 +135,7 @@ always @(*) begin
             hours_fsm = set_time_hours_left*10 + set_time_hours_right;
             minutes_fsm = set_time_minutes_left*10 + set_time_minutes_right;
             set_time_en = 1'b1;
-            if(set_time_ack_flag) begin
+            if(set_time_ack_flag && set_time_active) begin
                 normal_en = 1'b1;
             end
         end
