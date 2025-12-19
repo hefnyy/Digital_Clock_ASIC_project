@@ -32,5 +32,7 @@ The FSM transitions between states based on the `mode_button` and acknowledgment
 * **Set Time → Normal Mode**: Triggered by `mode_button` and `set_time_ack_flag`.
 * **Digit Selection**: In Set Time and Alarm modes, pressing `mode_button` selects the next digit to set. After the last digit, it goes to the Next Mode.
 * **Digit Increment**: In Set Time and Alarm modes, pressing `set_button` increments the selected digit.
+### Block Diagram
+![FSM State Diagram](fsm_state_diagram.png) 
 ### State Diagram
 ![FSM State Diagram](fsm_state_diagram.png) 
