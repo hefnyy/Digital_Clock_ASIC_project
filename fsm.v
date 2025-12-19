@@ -49,6 +49,7 @@ wire [5:0] set_alarm_minutes_total;
 always @(posedge clk or negedge rst) begin
     if(!rst) begin
         current_state <= normal;
+        alarm_status <= 'b0;
     end else begin
         current_state <= next_state;
     end
