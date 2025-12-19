@@ -2,30 +2,35 @@
 # Project 1: FSM Front-End Design
 
 ## Project Overview
-This project involves the front-end design of a Finite State Machine (FSM) for a **hh:mm 4-digit 24h-format watch controller**[cite: 1, 4]. [cite_start]The design includes the FSM diagram, Verilog RTL implementation, and a comprehensive testbench[cite: 4, 12, 14].
+This project involves the front-end design of a Finite State Machine (FSM) for a **hh:mm 4-digit 24h-format watch controller**. The design includes the FSM diagram, Verilog RTL implementation, and a comprehensive testbench.
 
 ## Team Information
-* **Structure:** Work as teams of 3 students[cite: 3].
+* **Structure:** Work as teams of 3 students.
 * **Group ID:** Gxx (Replace `xx` with your assigned 2-digit group number).
 
 ## Functional Requirements
-[cite_start]The FSM controller operates in **4 modes**, cycled through using the **Mode** button[cite: 4, 9]:
-1.  [cite_start]**Normal:** Displays time (hh:mm)[cite: 5].
-2.  [cite_start]**Set Time:** Set 1 digit at a time from left to right[cite: 6].
-3.  [cite_start]**Set Alarm:** Set 1 digit at a time from left to right[cite: 7].
-4.  [cite_start]**Stop-Watch:** Perform start-stop and split time (measured as mm:ss)[cite: 8].
+The FSM controller operates in **4 modes**, cycled through using the **Mode** button:
+1. **Normal Mode**: Displays the current time (hh:mm) and checks for alarm conditions. If the alarm is active and the current time matches the alarm time, the alarm will sound.
+2. **Alarm Mode**: Allows setting the alarm time. The alarm can be toggled on or off.
+3. **Stop-Watch Mode**: Displays stopwatch minutes and seconds. Supports start, stop, and split time functionality.
+4. **Set Time Mode**: Allows setting the current time. Time is set digit by digit from left to right.
 
 ### Inputs
-[cite_start]The system uses only 2 push-buttons[cite: 9]:
-* [cite_start]**Mode:** Press to go sequentially through the 4 modes and through digits[cite: 9].
-* [cite_start]**Set:** Press to increment the digits[cite: 10].
+The system uses only 2 push-buttons:
+* **Mode Button**: Cycles through the 4 modes and selects digits in Set Time and Alarm modes.
+* **Set Button**: Increments the selected digit in Set Time and Alarm modes.
 
-[cite_start]*Note: All needed peripherals and interfaces are assumed[cite: 11].*
+### Outputs
+* **Alarm Sound**: Activates when the alarm conditions are met in Normal Mode.
+* **Time Display**: Shows hours and minutes in Normal and Set Time modes, and minutes and seconds in Stop-Watch mode.
 
-## Directory Structure
-[cite_start]The project must be submitted as a single zip file `<Gxx_project1>.zip` containing a top-level directory named `<Gxx>` with the following structure[cite: 17]:
-
-```text
-Gxx/
-├── Gxx_project1.pdf       # Report containing Cover, Intro, FSM Design, RTL Design, TB Design, Simulation [cite: 18-24]
-└── files/                 # Directory containing all source and output files [cite: 25]
+### FSM State Transitions
+The FSM transitions between states based on the `mode_button` and acknowledgment flags:
+* **Normal → Alarm Mode**: Triggered by `mode_button`.
+* **Alarm → Stop-Watch Mode**: Triggered by `mode_button` and `set_alarm_ack_flag`.
+* **Stop-Watch → Set Time Mode**: Triggered by `mode_button` and `stop_watch_ack_flag`.
+* **Set Time → Normal Mode**: Triggered by `mode_button` and `set_time_ack_flag`.
+* **Digit Selection**: In Set Time and Alarm modes, pressing `mode_button` selects the next digit to set. After the last digit, it returns to Normal Mode.
+* **Digit Increment**: In Set Time and Alarm modes, pressing `set_button` increments the selected digit.
+### State Diagram
+![FSM State Diagram](fsm_state_diagram.png) 
