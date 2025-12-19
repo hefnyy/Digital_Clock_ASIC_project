@@ -41,7 +41,6 @@ wire clock_div_enable_top;
 
 fsm fsm_inst(
     .mode_button(mode_button_top),
-    .inc_button(inc_button_top),
     .set_time_hours_left(set_time_hours_left_top),
     .set_time_hours_right(set_time_hours_right_top),
     .set_time_minutes_left(set_time_minutes_left_top),

@@ -1,7 +1,6 @@
 module fsm (
     // Input Declaration
     input wire mode_button,
-    input wire inc_button,
     input wire [1:0] set_time_hours_left,
     input wire [3:0] set_time_hours_right,
     input wire [2:0] set_time_minutes_left,
