@@ -1,12 +1,17 @@
 module set_time (
-    input clk, rst, set_time_en,
-    input mode_button, inc_button,
+    // inputs Declaration
+    input wire clk, 
+    input wire rst,
+    input wire set_time_en,
+    input wire mode_button, 
+    input wire inc_button,
+    // outputs Declaration
     output reg [1:0] o_hours_left,
     output reg [3:0] o_hours_right,
     output reg [2:0] o_minutes_left,
     output reg [3:0] o_minutes_right,
     output reg set_time_active,
-    output ack_flag
+    output wire ack_flag
 );
     reg [2:0] modes;
 
