@@ -120,8 +120,6 @@ always @(*) begin
             set_alarm_en = 1'b1;
             if (on_off_alarm) begin
                 alarm_status = 1'b1;
-            end else begin
-                alarm_status = 'b0;
             end
         end
 
